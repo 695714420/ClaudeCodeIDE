@@ -39,24 +39,20 @@ export class CodexBackendAdapter implements BackendAdapter {
     this.onEventCallback = onEvent
 
     return new Promise<void>((resolve, reject) => {
-      const args = ['--full-auto']
+      // Use `codex exec` subcommand for non-interactive execution.
+      // Pass prompt as a CLI argument to avoid "stdin is not a terminal" errors.
+      // --json outputs JSONL events on stdout.
+      const args = ['exec', '--full-auto', '--json', options.prompt]
       const codexPath = resolveCliPath(this.meta.cliCommand)
       const isCmd = IS_WIN && (codexPath.endsWith('.cmd') || codexPath.endsWith('.bat'))
       const child = spawn(codexPath, args, {
         cwd: options.cwd,
         shell: isCmd,
-        stdio: ['pipe', 'pipe', 'pipe']
+        stdio: ['ignore', 'pipe', 'pipe']
       })
       this.childProcess = child
 
-      // Write prompt to stdin and close it
-      if (child.stdin) {
-        child.stdin.write(options.prompt)
-        child.stdin.end()
-      }
-
       const parser = new CodexOutputParser(onEvent)
-      parser.emitInit()
 
       let stderrData = ''
 
@@ -71,6 +67,10 @@ export class CodexBackendAdapter implements BackendAdapter {
         parser.feed(data.toString())
       })
 
+      child.stdout?.on('end', () => {
+        parser.flush()
+      })
+
       child.stderr?.on('data', (data: Buffer) => {
         stderrData += data.toString()
       })
@@ -82,13 +82,11 @@ export class CodexBackendAdapter implements BackendAdapter {
         }
         this.childProcess = null
 
-        if (code === 0) {
-          parser.emitResult()
-        } else {
+        if (code !== 0) {
           if (stderrData.trim().length > 0) {
             parser.emitError(stderrData.trim())
           }
-          if (code !== null && code !== 0) {
+          if (code !== null) {
             parser.emitError(`Process exited with code ${code}`)
           }
         }

@@ -429,7 +429,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
             )}
             {messages.map((msg) => (
               <div key={msg.id} className={`ai-chat-message ai-chat-message-${msg.role}`}>
-                <div className="ai-chat-message-label">{msg.role === 'user' ? t('chat.you', lang) : msg.role === 'error' ? t('chat.error', lang) : 'Claude'}</div>
+                <div className="ai-chat-message-label">{msg.role === 'user' ? t('chat.you', lang) : msg.role === 'error' ? t('chat.error', lang) : (activeBackendMeta?.name || 'AI')}</div>
                 <div className="ai-chat-message-content">
                   {msg.role === 'user' ? <p>{msg.content}</p> : msg.role === 'error' ? <div className="ai-chat-error-text">{msg.content}</div> : renderAssistantContent(msg.content, addUserMessage, claude, dispatch, state.editor.activeFilePath, lang)}
                 </div>
@@ -445,7 +445,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
 
             {state.cli.isLoading && state.cli.streamingText && (
               <div className="ai-chat-message ai-chat-message-assistant">
-                <div className="ai-chat-message-label">Claude</div>
+                <div className="ai-chat-message-label">{activeBackendMeta?.name || 'AI'}</div>
                 <div className="ai-chat-message-content"><pre><code>{state.cli.streamingText}</code></pre></div>
               </div>
             )}

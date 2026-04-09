@@ -1,7 +1,7 @@
 {
-  "name": "claudecode-ide",
+  "name": "code-ide",
   "version": "1.1.0",
-  "description": "ClaudeCode IDE - AI-powered integrated development environment",
+  "description": "Code IDE - AI-powered integrated development environment with multi-backend support",
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
@@ -18,8 +18,8 @@
     "test:coverage": "jest --coverage"
   },
   "build": {
-    "appId": "com.claudecode.ide",
-    "productName": "ClaudeCode IDE",
+    "appId": "com.code.ide",
+    "productName": "Code IDE",
     "directories": {
       "output": "release"
     },

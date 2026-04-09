@@ -1,0 +1,68 @@
+.statusbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 24px;
+  background-color: var(--statusbar-bg, #007acc);
+  color: var(--statusbar-fg, #ffffff);
+  font-size: 12px;
+  padding: 0 10px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.statusbar-left,
+.statusbar-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusbar-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.statusbar-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* API status indicators */
+.statusbar-api.connected .statusbar-indicator,
+.statusbar-cli.connected .statusbar-indicator,
+.statusbar-backend.connected .statusbar-indicator {
+  background-color: #89d185;
+}
+
+.statusbar-api.disconnected .statusbar-indicator,
+.statusbar-cli.disconnected .statusbar-indicator,
+.statusbar-backend.disconnected .statusbar-indicator {
+  background-color: #f48771;
+}
+
+/* Network status indicators */
+.statusbar-network.online .statusbar-indicator {
+  background-color: #89d185;
+}
+
+.statusbar-network.offline .statusbar-indicator {
+  background-color: #f48771;
+}
+
+/* Loading animation */
+.statusbar-loading {
+  animation: statusbar-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes statusbar-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

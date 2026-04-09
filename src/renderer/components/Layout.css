@@ -1,0 +1,84 @@
+.layout-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.layout-panel-left {
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.layout-panel-center {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-center-editor {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.layout-terminal-area {
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.layout-terminal-area.hidden {
+  display: none;
+}
+
+.layout-horizontal-resize-handle {
+  height: 4px;
+  width: 100%;
+  cursor: row-resize;
+  background-color: transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.layout-horizontal-resize-handle:hover,
+.layout-horizontal-resize-handle.dragging {
+  background-color: var(--accent-color, #007acc);
+}
+
+.layout-panel-right {
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.layout-panel-left.hidden,
+.layout-panel-right.hidden {
+  display: none;
+}
+
+.layout-resize-handle {
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  background-color: transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.layout-resize-handle:hover,
+.layout-resize-handle.dragging {
+  background-color: var(--accent-color, #007acc);
+}

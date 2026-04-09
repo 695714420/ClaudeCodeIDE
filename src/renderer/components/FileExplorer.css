@@ -1,0 +1,180 @@
+.file-explorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--sidebar-bg, #252526);
+  color: var(--sidebar-fg, #cccccc);
+  font-size: 13px;
+  user-select: none;
+  overflow: hidden;
+}
+
+.file-explorer-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border, #3c3c3c);
+  flex-shrink: 0;
+}
+
+.file-explorer-toolbar-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 14px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.file-explorer-toolbar-btn:hover {
+  background-color: var(--navbar-hover-bg, #3c3c3c);
+}
+
+.file-explorer-tree {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+}
+
+.file-explorer-node {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 24px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.file-explorer-node:hover {
+  background-color: var(--surface-hover, #2a2d2e);
+}
+
+.file-explorer-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.file-explorer-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.file-explorer-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-explorer-inline-input {
+  background-color: var(--input-bg, #3c3c3c);
+  color: var(--input-fg, #cccccc);
+  border: 1px solid var(--accent-color, #007acc);
+  font-size: 13px;
+  padding: 0 4px;
+  height: 20px;
+  outline: none;
+  flex: 1;
+  min-width: 60px;
+}
+
+/* Context menu */
+.file-explorer-context-menu {
+  position: fixed;
+  min-width: 160px;
+  background-color: var(--dropdown-bg, #252526);
+  border: 1px solid var(--dropdown-border, #454545);
+  border-radius: 4px;
+  padding: 4px 0;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.context-menu-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--dropdown-fg, #cccccc);
+  font-size: 13px;
+  padding: 6px 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.context-menu-item:hover {
+  background-color: var(--dropdown-hover-bg, #094771);
+  color: var(--dropdown-hover-fg, #ffffff);
+}
+
+.context-menu-item.danger:hover {
+  background-color: #c72e2e;
+}
+
+/* Git status indicators */
+.git-status-indicator {
+  margin-left: auto;
+  padding-right: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.git-status-modified {
+  color: #e2a52e;
+}
+
+.git-status-added {
+  color: #73c991;
+}
+
+.git-status-deleted {
+  color: #f14c4c;
+}
+
+.git-status-untracked {
+  color: #888888;
+}
+
+/* Filter input */
+.file-explorer-filter {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border, #3c3c3c);
+  flex-shrink: 0;
+}
+
+.file-explorer-filter-input {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--input-bg, #3c3c3c);
+  color: var(--input-fg, #cccccc);
+  border: 1px solid var(--border, #3c3c3c);
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 3px 6px;
+  outline: none;
+}
+
+.file-explorer-filter-input:focus {
+  border-color: var(--accent-color, #007acc);
+}
+
+/* Drag and drop */
+.file-explorer-node[draggable='true'] {
+  cursor: grab;
+}
+
+.file-explorer-node.drag-over {
+  background-color: var(--accent-color, #007acc);
+  opacity: 0.7;
+}

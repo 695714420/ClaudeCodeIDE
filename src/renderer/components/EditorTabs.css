@@ -1,0 +1,98 @@
+.editor-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 35px;
+  background-color: var(--surface, #252526);
+  border-bottom: 1px solid var(--bg, #1e1e1e);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+}
+
+.editor-tabs.empty {
+  height: 0;
+}
+
+.editor-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 100%;
+  cursor: pointer;
+  background-color: var(--navbar-bg, #2d2d2d);
+  border-right: 1px solid var(--bg, #1e1e1e);
+  color: var(--text-secondary, #969696);
+  font-size: 13px;
+  white-space: nowrap;
+  user-select: none;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.editor-tab:hover {
+  background-color: var(--border, #333333);
+}
+
+.editor-tab.active {
+  background-color: var(--bg, #1e1e1e);
+  color: var(--text-primary, #ffffff);
+  border-bottom: 2px solid var(--accent-color, #007acc);
+}
+
+.editor-tab-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-tab-dirty {
+  color: var(--text-primary, #e8e8e8);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.editor-tab-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #969696);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.editor-tab-close:hover {
+  background-color: var(--hover-overlay, rgba(255, 255, 255, 0.1));
+  color: var(--text-primary, #ffffff);
+}
+
+/* Git status indicator in tabs */
+.editor-tab-git-status {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.editor-tab-git-status.git-modified {
+  color: #e2a52e;
+}
+
+.editor-tab-git-status.git-added {
+  color: #73c991;
+}
+
+.editor-tab-git-status.git-deleted {
+  color: #f14c4c;
+}
+
+.editor-tab-git-status.git-untracked {
+  color: #888888;
+}

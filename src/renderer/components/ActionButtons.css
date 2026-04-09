@@ -1,0 +1,115 @@
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Loading / offline indicators */
+.action-buttons-loading,
+.action-buttons-offline {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.action-buttons-loading {
+  color: #dcdcaa;
+  background-color: rgba(220, 202, 170, 0.1);
+}
+
+.action-buttons-offline {
+  color: #f44747;
+  background-color: rgba(244, 71, 71, 0.1);
+}
+
+/* Button row */
+.action-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.action-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-btn-generate {
+  background-color: #0e639c;
+}
+
+.action-btn-generate:hover:not(:disabled) {
+  background-color: #1177bb;
+}
+
+.action-btn-optimize {
+  background-color: #388a34;
+}
+
+.action-btn-optimize:hover:not(:disabled) {
+  background-color: #45a040;
+}
+
+.action-btn-fixbug {
+  background-color: #a1260d;
+}
+
+.action-btn-fixbug:hover:not(:disabled) {
+  background-color: #c4260d;
+}
+
+.action-btn-explain {
+  background-color: #6c3fa0;
+}
+
+.action-btn-explain:hover:not(:disabled) {
+  background-color: #8250c4;
+}
+
+/* Custom request */
+.action-buttons-custom {
+  display: flex;
+  gap: 6px;
+}
+
+.action-buttons-custom-input {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid var(--border-color, #3c3c3c);
+  border-radius: 3px;
+  background-color: var(--input-bg, #3c3c3c);
+  color: var(--input-fg, #cccccc);
+  outline: none;
+}
+
+.action-buttons-custom-input:focus {
+  border-color: var(--focus-border, #007acc);
+}
+
+.action-buttons-custom-input::placeholder {
+  color: var(--placeholder-fg, #888888);
+}
+
+.action-buttons-custom-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-btn-custom-submit {
+  background-color: #0e639c;
+}
+
+.action-btn-custom-submit:hover:not(:disabled) {
+  background-color: #1177bb;
+}

@@ -1,0 +1,188 @@
+/* HistoryPanel */
+
+.history-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  font-size: 13px;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Search bar */
+.history-panel-search {
+  flex-shrink: 0;
+}
+
+.history-panel-search-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--input-border, #444);
+  border-radius: 3px;
+  background: var(--input-bg, #2d2d2d);
+  color: var(--input-fg, #ccc);
+  font-size: 12px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.history-panel-search-input:focus {
+  border-color: var(--accent-color, #007acc);
+}
+
+.history-panel-search-input::placeholder {
+  color: var(--text-secondary, #888);
+}
+
+/* Empty state */
+.history-panel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+.history-panel-empty-text {
+  color: var(--text-secondary, #888);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Record list */
+.history-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Single record item */
+.history-panel-item {
+  border: 1px solid var(--border, #333);
+  border-radius: 4px;
+  background: var(--surface, #252525);
+  overflow: hidden;
+}
+
+.history-panel-item-expanded {
+  border-color: var(--accent-color, #007acc);
+}
+
+/* Summary row */
+.history-item-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.history-item-summary:hover {
+  background: var(--surface-hover, #2a2a2a);
+}
+
+/* Type badge */
+.history-item-type {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: var(--surface, #333);
+  color: var(--text-secondary, #aaa);
+}
+
+.history-item-type-generate { color: #4ec9b0; background: rgba(78, 201, 176, 0.15); }
+.history-item-type-optimize { color: #569cd6; background: rgba(86, 156, 214, 0.15); }
+.history-item-type-fixBug   { color: #e74c3c; background: rgba(231, 76, 60, 0.15); }
+.history-item-type-explain  { color: #dcdcaa; background: rgba(220, 220, 170, 0.15); }
+.history-item-type-syntax   { color: #ce9178; background: rgba(206, 145, 120, 0.15); }
+.history-item-type-custom   { color: #c586c0; background: rgba(197, 134, 192, 0.15); }
+
+/* Instruction text */
+.history-item-instruction {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary, #ccc);
+}
+
+/* Timestamp */
+.history-item-time {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-secondary, #888);
+}
+
+/* Action buttons row */
+.history-item-actions {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px;
+  border-top: 1px solid var(--border, #333);
+}
+
+.history-action-btn {
+  padding: 3px 10px;
+  border: 1px solid var(--input-border, #444);
+  border-radius: 3px;
+  background: var(--surface, #2d2d2d);
+  color: var(--text-primary, #ccc);
+  cursor: pointer;
+  font-size: 11px;
+  transition: background 0.15s;
+}
+
+.history-action-btn:hover {
+  background: var(--surface-hover, #3a3a3a);
+}
+
+.history-action-delete:hover {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+/* Expanded detail view */
+.history-item-detail {
+  padding: 8px;
+  border-top: 1px solid var(--border, #333);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary, #888);
+}
+
+.history-detail-code,
+.history-detail-result {
+  background: var(--bg, #1e1e1e);
+  color: var(--text-primary, #d4d4d4);
+  padding: 6px 8px;
+  border-radius: 3px;
+  font-family: Consolas, Menlo, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}

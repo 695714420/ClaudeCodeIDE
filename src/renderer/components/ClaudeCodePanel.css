@@ -1,0 +1,274 @@
+.claudecode-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--bg, #1e1e1e);
+  color: var(--sidebar-fg, #cccccc);
+  overflow: hidden;
+}
+
+/* Header */
+.claudecode-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border, #333);
+  flex-shrink: 0;
+}
+.claudecode-header-left { display: flex; align-items: center; gap: 8px; }
+.claudecode-header-actions { display: flex; align-items: center; gap: 2px; }
+.claudecode-panel-title { font-weight: 600; font-size: 13px; }
+.claudecode-status-dot {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  background: var(--text-muted, #666);
+}
+.claudecode-status-dot.connected { background: #4ec94e; }
+.claudecode-status-dot.disconnected { background: #e74c3c; }
+.claudecode-icon-btn {
+  background: none; border: none; color: inherit; cursor: pointer;
+  padding: 4px 6px; font-size: 14px; border-radius: 4px; line-height: 1;
+}
+.claudecode-icon-btn:hover { background: var(--hover-overlay, rgba(255,255,255,0.08)); }
+.claudecode-panel-toggle {
+  background: none; border: none; color: inherit; cursor: pointer;
+  padding: 2px 6px; font-size: 12px; border-radius: 3px;
+}
+.claudecode-panel-toggle:hover { background: var(--hover-overlay, rgba(255,255,255,0.08)); }
+
+/* Chat messages */
+.claudecode-chat-messages {
+  flex: 1; overflow-y: auto; padding: 12px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.claudecode-welcome {
+  text-align: center; padding: 40px 16px; color: var(--text-secondary, #888);
+}
+.claudecode-welcome p { margin: 4px 0; }
+.claudecode-welcome-hint { font-size: 12px; color: var(--text-muted, #666); }
+
+.claudecode-message { border-radius: 8px; padding: 10px 12px; }
+.claudecode-message-assistant { background: var(--msg-assistant-bg, #2a2d2e); }
+.claudecode-message-assistant.error { background: var(--msg-error-bg, #3a1f1f); border: 1px solid var(--msg-error-border, #5a2d2d); }
+.claudecode-message-content pre {
+  margin: 0; white-space: pre-wrap; word-break: break-word;
+  font-size: 13px; line-height: 1.5; font-family: 'Consolas', 'Monaco', monospace;
+}
+.claudecode-message-content code { color: var(--text-primary, #d4d4d4); }
+.claudecode-error-text { color: #f48771; font-size: 13px; }
+.claudecode-message-actions {
+  display: flex; gap: 6px; margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border-light, rgba(255,255,255,0.06));
+}
+.claudecode-message-actions button {
+  background: var(--btn-bg, rgba(255,255,255,0.06)); border: 1px solid var(--btn-border, rgba(255,255,255,0.1));
+  color: var(--btn-fg, #bbb); font-size: 12px; padding: 3px 8px; border-radius: 4px; cursor: pointer;
+}
+.claudecode-message-actions button:hover { background: var(--hover-overlay, rgba(255,255,255,0.12)); color: var(--text-primary, #fff); }
+.claudecode-message-loading { padding: 12px; color: var(--text-secondary, #888); }
+.claudecode-typing { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Quick actions */
+.claudecode-quick-actions {
+  display: flex; gap: 4px; padding: 6px 10px;
+  border-top: 1px solid var(--border, #333); flex-shrink: 0;
+}
+.claudecode-quick-actions button {
+  flex: 1; background: var(--btn-bg, rgba(255,255,255,0.05)); border: 1px solid var(--btn-border, rgba(255,255,255,0.1));
+  color: var(--btn-fg, #bbb); font-size: 12px; padding: 4px 0; border-radius: 4px; cursor: pointer;
+}
+.claudecode-quick-actions button:hover:not(:disabled) { background: var(--hover-overlay, rgba(255,255,255,0.1)); color: var(--text-primary, #fff); }
+.claudecode-quick-actions button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Input area */
+.claudecode-input-area {
+  position: relative; padding: 8px 10px; border-top: 1px solid var(--border, #333); flex-shrink: 0;
+}
+.claudecode-input {
+  width: 100%; box-sizing: border-box; resize: none;
+  background: var(--input-bg, #2a2d2e); border: 1px solid var(--input-border, #444); border-radius: 6px;
+  color: var(--input-fg, #d4d4d4); font-size: 13px; padding: 8px 10px;
+  font-family: inherit; line-height: 1.4;
+}
+.claudecode-input:focus { outline: none; border-color: var(--accent-color, #007acc); }
+.claudecode-input:disabled { opacity: 0.5; }
+.claudecode-input-footer { display: flex; justify-content: flex-end; margin-top: 6px; }
+.claudecode-send-btn, .claudecode-cancel-btn {
+  padding: 5px 16px; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;
+}
+.claudecode-send-btn { background: var(--accent-color, #007acc); color: #fff; }
+.claudecode-send-btn:hover:not(:disabled) { background: #0098ff; }
+.claudecode-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.claudecode-cancel-btn { background: #c0392b; color: #fff; }
+.claudecode-cancel-btn:hover { background: #e74c3c; }
+
+/* Modals */
+.claudecode-modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--overlay-bg, rgba(0,0,0,0.5)); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+}
+.claudecode-modal {
+  background: var(--modal-bg, #252526); border: 1px solid var(--modal-border, #444); border-radius: 8px;
+  width: 360px; max-height: 80vh; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.claudecode-modal-large { width: 500px; }
+.claudecode-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border, #333); font-weight: 600;
+  color: var(--text-primary, #ccc);
+}
+.claudecode-modal-header button {
+  background: none; border: none; color: var(--text-secondary, #999); cursor: pointer; font-size: 16px; padding: 0 4px;
+}
+.claudecode-modal-header button:hover { color: var(--text-primary, #fff); }
+.claudecode-modal-body { padding: 16px; overflow-y: auto; max-height: 60vh; }
+.claudecode-status-row {
+  display: flex; justify-content: space-between; padding: 6px 0;
+  border-bottom: 1px solid var(--border-light, rgba(255,255,255,0.05));
+  color: var(--text-primary, #ccc);
+}
+.claudecode-status-badge { padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+.claudecode-status-badge.connected { background: #1a3a1a; color: #4ec94e; }
+.claudecode-status-badge.disconnected { background: #3a1a1a; color: #e74c3c; }
+.claudecode-refresh-btn {
+  width: 100%; margin-top: 12px; padding: 8px; background: var(--accent-color, #007acc);
+  color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;
+}
+.claudecode-refresh-btn:hover { background: #0098ff; }
+.claudecode-install-hint { color: var(--text-secondary, #888); font-size: 12px; margin-top: 8px; }
+
+
+/* User messages */
+.claudecode-message-user {
+  background: var(--msg-user-bg, #1a3a5c); border-radius: 8px; padding: 10px 12px;
+  align-self: flex-end; max-width: 90%; color: var(--msg-user-fg, #d4d4d4);
+}
+.claudecode-message-user p { margin: 0; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.claudecode-message-label {
+  font-size: 11px; font-weight: 600; color: var(--text-secondary, #888); margin-bottom: 4px; text-transform: uppercase;
+}
+.claudecode-message-user .claudecode-message-label { color: #6cb6ff; }
+.claudecode-message-error { background: var(--msg-error-bg, #3a1f1f); border: 1px solid var(--msg-error-border, #5a2d2d); border-radius: 8px; padding: 10px 12px; }
+
+
+/* Commands modal */
+.claudecode-cmd-filter {
+  width: 100%; box-sizing: border-box; padding: 8px 10px; margin-bottom: 12px;
+  background: var(--input-bg, #2a2d2e); border: 1px solid var(--input-border, #444); border-radius: 6px;
+  color: var(--input-fg, #d4d4d4); font-size: 13px;
+}
+.claudecode-cmd-filter:focus { outline: none; border-color: var(--accent-color, #007acc); }
+.claudecode-cmd-list { display: flex; flex-direction: column; gap: 8px; }
+.claudecode-cmd-group-label { font-size: 11px; font-weight: 600; color: var(--text-secondary, #888); margin-bottom: 4px; }
+.claudecode-cmd-item {
+  display: flex; align-items: center; gap: 6px; padding: 4px 0;
+  border-bottom: 1px solid var(--border-light, rgba(255,255,255,0.04));
+}
+.claudecode-cmd-run-btn {
+  background: var(--btn-bg, rgba(255,255,255,0.06)); border: 1px solid var(--btn-border, rgba(255,255,255,0.1));
+  color: #4ec94e; font-size: 10px; padding: 3px 6px; border-radius: 4px; cursor: pointer;
+  flex-shrink: 0;
+}
+.claudecode-cmd-run-btn:hover:not(:disabled) { background: rgba(78,201,78,0.15); }
+.claudecode-cmd-run-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.claudecode-cmd-info { flex: 1; cursor: pointer; display: flex; gap: 8px; align-items: baseline; }
+.claudecode-cmd-info:hover { color: var(--text-primary, #fff); }
+.claudecode-cmd-name { font-family: monospace; font-size: 13px; color: #6cb6ff; white-space: nowrap; }
+.claudecode-cmd-brief { font-size: 12px; color: var(--text-secondary, #888); }
+.claudecode-cmd-detail { padding: 8px 0; }
+.claudecode-cmd-back {
+  background: none; border: none; color: #6cb6ff; cursor: pointer; font-size: 13px; padding: 0; margin-bottom: 12px;
+}
+.claudecode-cmd-back:hover { text-decoration: underline; }
+.claudecode-cmd-detail h3 { margin: 0 0 8px; font-family: monospace; color: #6cb6ff; font-size: 16px; }
+.claudecode-cmd-detail-text { color: var(--text-primary, #ccc); font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
+.claudecode-cmd-run {
+  width: 100%; padding: 8px; background: var(--accent-color, #007acc); color: #fff; border: none;
+  border-radius: 4px; cursor: pointer; font-size: 13px;
+}
+.claudecode-cmd-run:hover:not(:disabled) { background: #0098ff; }
+.claudecode-cmd-run:disabled { opacity: 0.4; cursor: not-allowed; }
+.claudecode-cmd-group { margin-bottom: 8px; }
+
+
+/* Slash command popup */
+.claudecode-slash-popup {
+  position: absolute; bottom: 100%; left: 0; right: 0;
+  background: var(--modal-bg, #252526); border: 1px solid var(--modal-border, #444); border-radius: 6px;
+  max-height: 240px; overflow-y: auto; z-index: 50;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.4); margin-bottom: 4px;
+}
+.claudecode-slash-item {
+  display: flex; gap: 8px; align-items: baseline; padding: 6px 12px; cursor: pointer;
+}
+.claudecode-slash-item:hover { background: rgba(0,122,204,0.2); }
+.claudecode-slash-cmd { font-family: monospace; font-size: 13px; color: #6cb6ff; white-space: nowrap; }
+.claudecode-slash-brief { font-size: 12px; color: var(--text-secondary, #888); }
+
+
+/* Session tabs */
+.claudecode-session-tabs {
+  display: flex; align-items: center; gap: 0;
+  border-bottom: 1px solid var(--border, #333); flex-shrink: 0;
+  overflow-x: auto; background: var(--surface, rgba(0,0,0,0.15));
+}
+.claudecode-session-tab {
+  display: flex; align-items: center; gap: 4px;
+  padding: 5px 10px; font-size: 12px; cursor: pointer;
+  border-right: 1px solid var(--border-light, rgba(255,255,255,0.05));
+  white-space: nowrap; color: var(--text-secondary, #888);
+}
+.claudecode-session-tab:hover { color: var(--text-primary, #ccc); background: var(--hover-overlay, rgba(255,255,255,0.04)); }
+.claudecode-session-tab.active { color: var(--text-primary, #fff); background: var(--hover-overlay, rgba(255,255,255,0.08)); border-bottom: 2px solid var(--accent-color, #007acc); }
+.claudecode-session-tab-name { max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+.claudecode-session-tab-close {
+  background: none; border: none; color: var(--text-muted, #666); cursor: pointer;
+  font-size: 10px; padding: 0 2px; line-height: 1;
+}
+.claudecode-session-tab-close:hover { color: #e74c3c; }
+.claudecode-session-add {
+  background: none; border: none; color: var(--text-secondary, #888); cursor: pointer;
+  font-size: 16px; padding: 4px 10px; line-height: 1;
+}
+.claudecode-session-add:hover { color: var(--text-primary, #fff); background: var(--hover-overlay, rgba(255,255,255,0.06)); }
+
+/* Option buttons (AskUserQuestion) */
+.claudecode-options { margin-top: 8px; }
+.claudecode-option-btn {
+  display: block; width: 100%; text-align: left; margin: 4px 0;
+  padding: 8px 12px; background: var(--btn-bg, rgba(255,255,255,0.06));
+  border: 1px solid var(--btn-border, rgba(255,255,255,0.12)); border-radius: 6px;
+  color: var(--text-primary, #ccc); cursor: pointer; font-size: 13px;
+}
+.claudecode-option-btn:hover { background: rgba(0,122,204,0.2); border-color: var(--accent-color, #007acc); color: var(--text-primary, #fff); }
+
+
+/* Code block wrapper with Apply button (Task 13.1, 13.2, 13.4) */
+.claudecode-codeblock-wrapper {
+  margin: 8px 0; border-radius: 6px; overflow: hidden;
+  border: 1px solid var(--border-light, rgba(255,255,255,0.08));
+}
+.claudecode-codeblock-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 8px; background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--border-light, rgba(255,255,255,0.06));
+}
+.claudecode-codeblock-lang {
+  font-size: 11px; color: var(--text-secondary, #888); font-family: monospace;
+}
+.claudecode-apply-btn {
+  background: var(--accent-color, #007acc); border: none; color: #fff;
+  font-size: 11px; padding: 2px 8px; border-radius: 3px; cursor: pointer;
+}
+.claudecode-apply-btn:hover:not(:disabled) { background: #0098ff; }
+.claudecode-apply-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.claudecode-codeblock {
+  margin: 0; padding: 8px 10px; background: rgba(0,0,0,0.2);
+  white-space: pre-wrap; word-break: break-word;
+  font-size: 13px; line-height: 1.5; font-family: 'Consolas', 'Monaco', monospace;
+}
+.claudecode-codeblock code { color: var(--text-primary, #d4d4d4); }

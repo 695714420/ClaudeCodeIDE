@@ -60,34 +60,34 @@ const electronAPI = {
     ipcRenderer.invoke(IPC_CHANNELS.BACKEND_CHECK_STATUS, backendId),
 
   // Cache management
-  saveHistoryRecord: (record: HistoryRecord): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CACHE_SAVE_HISTORY, record),
-  getHistoryRecords: (query?: string): Promise<HistoryRecord[]> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CACHE_GET_HISTORY, query),
-  deleteHistoryRecord: (id: string): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CACHE_DELETE_HISTORY, id),
-  clearHistory: (): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CACHE_CLEAR_HISTORY),
-  saveCodeSnippet: (snippet: CodeSnippet): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CACHE_SAVE_SNIPPET, snippet),
-  getCodeSnippets: (): Promise<CodeSnippet[]> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CACHE_GET_SNIPPETS),
+  saveHistoryRecord: async (record: HistoryRecord): Promise<void> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.CACHE_SAVE_HISTORY, record)),
+  getHistoryRecords: async (query?: string): Promise<HistoryRecord[]> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.CACHE_GET_HISTORY, query)),
+  deleteHistoryRecord: async (id: string): Promise<void> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.CACHE_DELETE_HISTORY, id)),
+  clearHistory: async (): Promise<void> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.CACHE_CLEAR_HISTORY)),
+  saveCodeSnippet: async (snippet: CodeSnippet): Promise<void> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.CACHE_SAVE_SNIPPET, snippet)),
+  getCodeSnippets: async (): Promise<CodeSnippet[]> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.CACHE_GET_SNIPPETS)),
 
   // Settings
-  getSettings: (): Promise<unknown> =>
-    ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_GET),
-  saveSettings: (settings: unknown): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_SAVE, settings),
+  getSettings: async (): Promise<unknown> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_GET)),
+  saveSettings: async (settings: unknown): Promise<void> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_SAVE, settings)),
 
   // Dialog
   openFolderDialog: (): Promise<string | null> =>
     ipcRenderer.invoke(IPC_CHANNELS.DIALOG_OPEN_FOLDER),
 
   // Sessions
-  saveSessions: (sessions: unknown): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.SESSIONS_SAVE, sessions),
-  loadSessions: (): Promise<unknown> =>
-    ipcRenderer.invoke(IPC_CHANNELS.SESSIONS_LOAD),
+  saveSessions: async (sessions: unknown): Promise<void> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.SESSIONS_SAVE, sessions)),
+  loadSessions: async (): Promise<unknown> =>
+    unwrapResult(await ipcRenderer.invoke(IPC_CHANNELS.SESSIONS_LOAD)),
 
   // Buddy
   getBuddyUserId: (): Promise<string | null> =>

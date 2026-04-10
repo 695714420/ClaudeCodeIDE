@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { AppProvider, useAppState, useAppDispatch } from '../store/AppContext'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { Layout } from '../components/Layout'
@@ -31,6 +31,7 @@ function AppContent(): JSX.Element {
   const { openFile } = useFileManager()
   const [showSettings, setShowSettings] = useState(false)
   const [settingsLoaded, setSettingsLoaded] = useState(false)
+  const settingsInitializedRef = useRef(false)
   const lang = (state.settings.language ?? 'en') as Lang
 
   // Load saved settings on mount
@@ -43,9 +44,15 @@ function AppContent(): JSX.Element {
     }).catch(() => setSettingsLoaded(true))
   }, [dispatch])
 
-  // Auto-save settings whenever they change
+  // Auto-save settings whenever they change (skip the first render after load)
   useEffect(() => {
     if (!settingsLoaded) return
+    // Skip the first trigger right after settingsLoaded becomes true
+    // because state.settings hasn't been updated with loaded values yet
+    if (!settingsInitializedRef.current) {
+      settingsInitializedRef.current = true
+      return
+    }
     window.electronAPI.saveSettings(state.settings).catch(() => {})
   }, [state.settings, settingsLoaded])
 

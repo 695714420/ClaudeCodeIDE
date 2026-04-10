@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import { useAppState, useAppDispatch } from '../store/AppContext'
 import type {
   ApiResult,
@@ -95,6 +95,8 @@ export function useAIBackend(): UseAIBackendReturn {
   const [showDiff, setShowDiff] = useState(false)
   const [backends, setBackends] = useState<BackendMeta[]>([])
 
+  // Track the last request metadata for history saving
+  const lastRequestRef = useRef<{ type: RequestType; instruction: string; code?: string } | null>(null)
   // Derived state from AppContext
   const streamingText = state.cli.streamingText
   const isStreaming = state.cli.isLoading
@@ -120,11 +122,13 @@ export function useAIBackend(): UseAIBackendReturn {
         }
         case 'result': {
           const resultData = event.data as ResultEventData
+          // Use streamingText as fallback if result content is empty (common with Codex)
+          const content = resultData?.result || state.cli.streamingText || ''
           const result: ApiResult = {
             id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
             type: state.cli.currentRequestType || 'custom',
             success: true,
-            content: resultData?.result || '',
+            content,
             timestamp: Date.now()
           }
           dispatch({ type: 'SET_CLI_RESULT', payload: result })
@@ -168,25 +172,73 @@ export function useAIBackend(): UseAIBackendReturn {
     }
   }, [dispatch, state.cli.currentRequestType])
 
-  // Load history on mount and auto-connect CLI
+  // Load history and backends on mount
   useEffect(() => {
     window.electronAPI.getHistoryRecords().then((records) => {
-      // Filter out corrupted records that could crash HistoryPanel
       const valid = Array.isArray(records) ? records.filter(r => r && r.id && r.result) : []
-      setHistoryRecords(valid)
+      // Filter by current backend
+      const filtered = valid.filter(r => !r.backendId || r.backendId === state.cli.activeBackend)
+      setHistoryRecords(filtered)
     }).catch(() => {})
-    // Auto-check CLI status on startup
-    checkCliStatus()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Initialize activeBackend from persisted settings and load backends list
-  useEffect(() => {
-    if (state.settings.selectedBackend) {
-      dispatch({ type: 'SET_ACTIVE_BACKEND', payload: state.settings.selectedBackend })
-    }
     // Load available backends
     window.electronAPI.listBackends().then(setBackends).catch(() => {})
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.cli.activeBackend]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Sync activeBackend when settings are loaded/changed (handles async settings load)
+  useEffect(() => {
+    const backendId = state.settings.selectedBackend
+    if (backendId && backendId !== state.cli.activeBackend) {
+      dispatch({ type: 'SET_ACTIVE_BACKEND', payload: backendId })
+    }
+    // Always check status for the current backend when settings change
+    const idToCheck = backendId || state.cli.activeBackend || 'claude'
+    window.electronAPI.checkCliStatus(idToCheck).then((result) => {
+      setCliStatus(result)
+      dispatch({
+        type: 'SET_CLI_STATUS',
+        payload: {
+          status: result.available ? 'connected' : 'disconnected',
+          version: result.version
+        }
+      })
+    }).catch(() => {
+      setCliStatus({ available: false })
+      dispatch({ type: 'SET_CLI_STATUS', payload: { status: 'disconnected' } })
+    })
+  }, [state.settings.selectedBackend]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Save history when a new result arrives
+  const prevResultForHistoryRef = useRef(state.cli.lastResult)
+  useEffect(() => {
+    const result = state.cli.lastResult
+    if (result && result !== prevResultForHistoryRef.current && result.success && lastRequestRef.current) {
+      const { type, instruction, code } = lastRequestRef.current
+      const language = state.editor.activeFilePath && state.editor.openFiles[state.editor.activeFilePath]
+        ? state.editor.openFiles[state.editor.activeFilePath].language || 'javascript'
+        : 'javascript'
+      const record: HistoryRecord = {
+        id: result.id,
+        type,
+        instruction,
+        code,
+        language,
+        result,
+        createdAt: Date.now(),
+        backendId: state.cli.activeBackend
+      }
+      window.electronAPI.saveHistoryRecord(record)
+        .then(() => window.electronAPI.getHistoryRecords())
+        .then((records) => {
+          const valid = Array.isArray(records) ? records.filter(r => r && r.id && r.result) : []
+          const filtered = valid.filter(r => !r.backendId || r.backendId === state.cli.activeBackend)
+          setHistoryRecords(filtered)
+        })
+        .catch(() => {})
+      lastRequestRef.current = null
+    }
+    prevResultForHistoryRef.current = result
+  }, [state.cli.lastResult]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Helpers ---
 
@@ -273,30 +325,14 @@ export function useAIBackend(): UseAIBackendReturn {
       dispatch({ type: 'CLEAR_STREAMING_TEXT' })
       setShowDiff(type === 'optimize' || type === 'fixBug')
 
+      // Store request metadata for history saving (will be picked up by the effect)
+      lastRequestRef.current = { type, instruction, code }
+
       // Use workspace root as CLI working directory
       const cwd = state.workspace.rootPath || '.'
 
       try {
         await window.electronAPI.executeCli(prompt, cwd, state.cli.activeBackend)
-
-        // After execute resolves, stream events will have been processed.
-        // Save to history
-        const lastResult = state.cli.lastResult
-        if (lastResult) {
-          const language = getCurrentLanguage()
-          const record: HistoryRecord = {
-            id: lastResult.id,
-            type,
-            instruction,
-            code,
-            language,
-            result: lastResult,
-            createdAt: Date.now()
-          }
-          await window.electronAPI.saveHistoryRecord(record)
-          const updated = await window.electronAPI.getHistoryRecords()
-          setHistoryRecords(updated)
-        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         dispatch({
@@ -313,7 +349,7 @@ export function useAIBackend(): UseAIBackendReturn {
         dispatch({ type: 'SET_CLI_LOADING', payload: { isLoading: false, requestType: null } })
       }
     },
-    [dispatch, getCurrentLanguage, state.cli.lastResult, state.workspace.rootPath, state.cli.activeBackend]
+    [dispatch, state.workspace.rootPath, state.cli.activeBackend]
   )
 
   // --- 10.1: Code Generation Flow ---

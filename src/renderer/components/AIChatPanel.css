@@ -12,14 +12,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* --- Custom scrollbar --- */
-.ai-chat-panel ::-webkit-scrollbar { width: 6px; }
-.ai-chat-panel ::-webkit-scrollbar-track { background: transparent; }
-.ai-chat-panel ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.12);
-  border-radius: 3px;
-}
-.ai-chat-panel ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+/* --- Custom scrollbar (inherits global styles) --- */
 
 /* --- Header --- */
 .ai-chat-panel-header {

@@ -19,7 +19,7 @@ interface SlashCommand {
   category: 'context' | 'navigation' | 'tools' | 'config' | 'info'
 }
 
-const SLASH_COMMANDS: SlashCommand[] = [
+const CLAUDE_SLASH_COMMANDS: SlashCommand[] = [
   { cmd: '/compact', briefKey: 'slash.compact.brief', detailKey: 'slash.compact.detail', category: 'context' },
   { cmd: '/clear', briefKey: 'slash.clear.brief', detailKey: 'slash.clear.detail', category: 'context' },
   { cmd: '/context', briefKey: 'slash.context.brief', detailKey: 'slash.context.detail', category: 'context' },
@@ -52,6 +52,24 @@ const SLASH_COMMANDS: SlashCommand[] = [
   { cmd: '/pr-comments', briefKey: 'slash.prComments.brief', detailKey: 'slash.prComments.detail', category: 'tools' },
   { cmd: '/release-notes', briefKey: 'slash.releaseNotes.brief', detailKey: 'slash.releaseNotes.detail', category: 'info' },
 ]
+
+const CODEX_SLASH_COMMANDS: SlashCommand[] = [
+  { cmd: '/help', briefKey: 'codex.slash.help.brief', detailKey: 'codex.slash.help.detail', category: 'info' },
+  { cmd: '/status', briefKey: 'codex.slash.status.brief', detailKey: 'codex.slash.status.detail', category: 'info' },
+  { cmd: '/model', briefKey: 'codex.slash.model.brief', detailKey: 'codex.slash.model.detail', category: 'config' },
+  { cmd: '/mode', briefKey: 'codex.slash.mode.brief', detailKey: 'codex.slash.mode.detail', category: 'config' },
+  { cmd: '/compact', briefKey: 'codex.slash.compact.brief', detailKey: 'codex.slash.compact.detail', category: 'context' },
+  { cmd: '/clear', briefKey: 'codex.slash.clear.brief', detailKey: 'codex.slash.clear.detail', category: 'context' },
+  { cmd: '/history', briefKey: 'codex.slash.history.brief', detailKey: 'codex.slash.history.detail', category: 'context' },
+  { cmd: '/undo', briefKey: 'codex.slash.undo.brief', detailKey: 'codex.slash.undo.detail', category: 'tools' },
+  { cmd: '/diff', briefKey: 'codex.slash.diff.brief', detailKey: 'codex.slash.diff.detail', category: 'tools' },
+  { cmd: '/review', briefKey: 'codex.slash.review.brief', detailKey: 'codex.slash.review.detail', category: 'tools' },
+  { cmd: '/resume', briefKey: 'codex.slash.resume.brief', detailKey: 'codex.slash.resume.detail', category: 'navigation' },
+]
+
+function getSlashCommands(backendId: string): SlashCommand[] {
+  return backendId === 'codex' ? CODEX_SLASH_COMMANDS : CLAUDE_SLASH_COMMANDS
+}
 
 function getCategoryLabels(lang: Lang): Record<string, string> {
   return {
@@ -325,11 +343,25 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
     setMessages(prev => [...prev, { id: `user-${Date.now()}`, role: 'user', content: text }])
   }, [])
 
+  // Build a condensed context summary from session history for the AI
+  const buildContextPrefix = useCallback((): string => {
+    if (messages.length === 0) return ''
+    // Take last 6 messages max, truncate each to 200 chars
+    const recent = messages.slice(-6)
+    const summary = recent.map(m => {
+      const role = m.role === 'user' ? 'User' : 'Assistant'
+      const text = m.content.length > 200 ? m.content.slice(0, 200) + '...' : m.content
+      return `${role}: ${text}`
+    }).join('\n')
+    return `[Previous conversation context]\n${summary}\n\n[Current request]\n`
+  }, [messages])
+
   const handleSend = (): void => {
     const trimmed = input.trim()
     if (!trimmed || state.cli.isLoading) return
     addUserMessage(trimmed)
-    claude.customRequest(trimmed)
+    const contextPrefix = buildContextPrefix()
+    claude.customRequest(contextPrefix + trimmed)
     setInput('')
   }
 
@@ -349,8 +381,10 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
     }
   }
 
+  const slashCommands = getSlashCommands(state.cli.activeBackend)
+
   const slashPopupCmds = showSlashPopup
-    ? SLASH_COMMANDS.filter(c => c.cmd.startsWith(slashFilter) || (slashFilter === '/'))
+    ? slashCommands.filter(c => c.cmd.startsWith(slashFilter) || (slashFilter === '/'))
     : []
 
   const handleSlashSelect = (cmd: SlashCommand): void => {
@@ -364,7 +398,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
     setShowCommandsModal(false)
   }
 
-  const filteredCmds = SLASH_COMMANDS.filter(c =>
+  const filteredCmds = slashCommands.filter(c =>
     !cmdFilter || c.cmd.includes(cmdFilter.toLowerCase()) || t(c.briefKey, lang).includes(cmdFilter)
   )
 
@@ -372,6 +406,27 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
     label,
     commands: filteredCmds.filter(c => c.category === key)
   })).filter(g => g.commands.length > 0)
+
+  // Handle loading a history record into a new session tab
+  const handleLoadHistory = useCallback((record: HistoryRecord) => {
+    sessionCounter++
+    const historyMessages: ChatMessage[] = [
+      { id: `hist-user-${record.id}`, role: 'user', content: record.instruction },
+      {
+        id: `hist-ai-${record.id}`,
+        role: record.result?.success ? 'assistant' : 'error',
+        content: record.result?.success ? (record.result.content || '') : (record.result?.errorExplanation || '')
+      }
+    ]
+    const newSession: ChatSession = {
+      id: `session-${sessionCounter}`,
+      name: record.instruction.slice(0, 20) || `${t('chat.newSession', lang)} ${sessionCounter}`,
+      messages: historyMessages
+    }
+    setSessions(prev => [...prev, newSession])
+    setActiveSessionId(newSession.id)
+    setShowHistoryModal(false)
+  }, [lang])
 
   return (
     <div className="ai-chat-panel" data-testid="ai-chat-panel">
@@ -550,7 +605,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
           <div className="ai-chat-modal ai-chat-modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="ai-chat-modal-header"><span>{t('history.title', lang)}</span><button onClick={() => setShowHistoryModal(false)}>{'\u2715'}</button></div>
             <div className="ai-chat-modal-body">
-              <HistoryPanel records={claude.historyRecords} onSearch={claude.searchHistory} onDelete={claude.deleteHistoryRecord} onReplay={claude.replayHistory} />
+              <HistoryPanel records={claude.historyRecords} onSearch={claude.searchHistory} onDelete={claude.deleteHistoryRecord} onReplay={handleLoadHistory} />
             </div>
           </div>
         </div>

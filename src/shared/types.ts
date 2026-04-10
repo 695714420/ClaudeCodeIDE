@@ -100,6 +100,7 @@ export interface HistoryRecord {
   language?: string
   result: ApiResult
   createdAt: number
+  backendId?: string
 }
 
 export interface CodeSnippet {

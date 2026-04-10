@@ -64,6 +64,11 @@ function AppContent(): JSX.Element {
         e.preventDefault()
         dispatch({ type: 'TOGGLE_TERMINAL' })
       }
+      // Ctrl+S: Save file
+      if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key === 's') {
+        e.preventDefault()
+        handleFileAction('save')
+      }
       // Ctrl+Shift+P: Command Palette
       if (e.ctrlKey && e.shiftKey && !e.altKey && e.key === 'P') {
         e.preventDefault()
@@ -77,7 +82,25 @@ function AppContent(): JSX.Element {
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [dispatch])
+  }, [dispatch, handleFileAction])
+
+  // Auto-save dirty files after a delay
+  useEffect(() => {
+    if (state.settings.autoSave === 'off') return
+    const delay = state.settings.autoSave === 'afterDelay' ? 1000 : 0
+    const { openFiles } = state.editor
+    const dirtyFiles = Object.values(openFiles).filter(f => f.isDirty)
+    if (dirtyFiles.length === 0) return
+
+    const timer = setTimeout(() => {
+      dirtyFiles.forEach(f => {
+        window.electronAPI.writeFile(f.path, f.content)
+          .then(() => dispatch({ type: 'SET_FILE_DIRTY', payload: { path: f.path, isDirty: false } }))
+          .catch(() => {})
+      })
+    }, delay)
+    return () => clearTimeout(timer)
+  }, [state.editor.openFiles, state.settings.autoSave, dispatch])
 
   const activeFile = state.editor.activeFilePath
     ? state.editor.openFiles[state.editor.activeFilePath]
@@ -99,9 +122,20 @@ function AppContent(): JSX.Element {
             showToast('error', t('fileError.openFolderFailed', lang, msg))
           }
         }
+      } else if (action === 'save') {
+        const { activeFilePath, openFiles } = state.editor
+        if (activeFilePath && openFiles[activeFilePath] && openFiles[activeFilePath].isDirty) {
+          try {
+            await window.electronAPI.writeFile(activeFilePath, openFiles[activeFilePath].content)
+            dispatch({ type: 'SET_FILE_DIRTY', payload: { path: activeFilePath, isDirty: false } })
+          } catch (e) {
+            const msg = e instanceof Error ? e.message : String(e)
+            showToast('error', t('fileError.writeFailed', lang, msg))
+          }
+        }
       }
     },
-    [dispatch, lang]
+    [dispatch, lang, state.editor]
   )
 
   const handleEditAction = useCallback(

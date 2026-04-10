@@ -1,7 +1,6 @@
 import { spawn, execFile, type ChildProcess } from 'child_process'
 import { execSync } from 'child_process'
 import type { BackendAdapter, BackendMeta, CliExecuteOptions, CliStreamEvent, CliStatusResult } from '../../shared/types'
-import { CLI_TIMEOUT_MS } from '../../shared/constants'
 import { CodexOutputParser } from './CodexOutputParser'
 
 const IS_WIN = process.platform === 'win32'
@@ -30,7 +29,6 @@ export class CodexBackendAdapter implements BackendAdapter {
 
   private childProcess: ChildProcess | null = null
   private onEventCallback: ((event: CliStreamEvent) => void) | null = null
-  private timeoutTimer: NodeJS.Timeout | null = null
 
   execute(
     options: CliExecuteOptions,
@@ -42,7 +40,7 @@ export class CodexBackendAdapter implements BackendAdapter {
       // Use `codex exec` subcommand for non-interactive execution.
       // Pass prompt as a CLI argument to avoid "stdin is not a terminal" errors.
       // --json outputs JSONL events on stdout.
-      const args = ['exec', '--full-auto', '--json', options.prompt]
+      const args = ['exec', '--full-auto', '--skip-git-repo-check', '--json', options.prompt]
       const codexPath = resolveCliPath(this.meta.cliCommand)
       const isCmd = IS_WIN && (codexPath.endsWith('.cmd') || codexPath.endsWith('.bat'))
       const child = spawn(codexPath, args, {
@@ -55,13 +53,6 @@ export class CodexBackendAdapter implements BackendAdapter {
       const parser = new CodexOutputParser(onEvent)
 
       let stderrData = ''
-
-      this.timeoutTimer = setTimeout(() => {
-        if (this.childProcess) {
-          this.childProcess.kill('SIGTERM')
-          onEvent({ type: 'error', data: { message: '请求超时，请重试' } })
-        }
-      }, CLI_TIMEOUT_MS)
 
       child.stdout?.on('data', (data: Buffer) => {
         parser.feed(data.toString())
@@ -76,10 +67,6 @@ export class CodexBackendAdapter implements BackendAdapter {
       })
 
       child.on('close', (code: number | null) => {
-        if (this.timeoutTimer) {
-          clearTimeout(this.timeoutTimer)
-          this.timeoutTimer = null
-        }
         this.childProcess = null
 
         if (code !== 0) {
@@ -95,10 +82,6 @@ export class CodexBackendAdapter implements BackendAdapter {
       })
 
       child.on('error', (err: NodeJS.ErrnoException) => {
-        if (this.timeoutTimer) {
-          clearTimeout(this.timeoutTimer)
-          this.timeoutTimer = null
-        }
         this.childProcess = null
 
         if (err.code === 'ENOENT') {

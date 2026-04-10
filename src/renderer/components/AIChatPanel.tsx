@@ -447,10 +447,14 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
               <div className="ai-chat-message ai-chat-message-assistant">
                 <div className="ai-chat-message-label">{activeBackendMeta?.name || 'AI'}</div>
                 <div className="ai-chat-message-content"><pre><code>{state.cli.streamingText}</code></pre></div>
+                <div className="ai-chat-streaming-indicator"><span className="ai-chat-typing-dot" /><span className="ai-chat-typing-dot" /><span className="ai-chat-typing-dot" /></div>
               </div>
             )}
             {state.cli.isLoading && !state.cli.streamingText && (
-              <div className="ai-chat-message ai-chat-message-loading"><span className="ai-chat-typing">{t('chat.thinking', lang)}</span></div>
+              <div className="ai-chat-message ai-chat-message-loading">
+                <span className="ai-chat-typing-dot" /><span className="ai-chat-typing-dot" /><span className="ai-chat-typing-dot" />
+                <span className="ai-chat-typing">{t('chat.thinking', lang)}</span>
+              </div>
             )}
             <div ref={messagesEndRef} />
           </div>

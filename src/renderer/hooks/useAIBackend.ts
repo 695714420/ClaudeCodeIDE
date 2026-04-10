@@ -170,7 +170,11 @@ export function useAIBackend(): UseAIBackendReturn {
 
   // Load history on mount and auto-connect CLI
   useEffect(() => {
-    window.electronAPI.getHistoryRecords().then(setHistoryRecords).catch(() => {})
+    window.electronAPI.getHistoryRecords().then((records) => {
+      // Filter out corrupted records that could crash HistoryPanel
+      const valid = Array.isArray(records) ? records.filter(r => r && r.id && r.result) : []
+      setHistoryRecords(valid)
+    }).catch(() => {})
     // Auto-check CLI status on startup
     checkCliStatus()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

@@ -159,7 +159,7 @@ export function HistoryPanel({
                       className="history-detail-result"
                       data-testid={`history-detail-result-${record.id}`}
                     >
-                      <code>{record.result.content}</code>
+                      <code>{record.result?.content || ''}</code>
                     </pre>
                   </div>
                 </div>

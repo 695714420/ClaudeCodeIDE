@@ -49,11 +49,27 @@
   flex-shrink: 0;
   position: relative;
   z-index: 10;
+  transition: background-color 0.15s ease;
+}
+
+.layout-horizontal-resize-handle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .layout-horizontal-resize-handle:hover,
 .layout-horizontal-resize-handle.dragging {
   background-color: var(--accent-color, #007acc);
+}
+
+.layout-horizontal-resize-handle:hover::after,
+.layout-horizontal-resize-handle.dragging::after {
+  background: transparent;
 }
 
 .layout-panel-right {
@@ -76,9 +92,25 @@
   flex-shrink: 0;
   position: relative;
   z-index: 10;
+  transition: background-color 0.15s ease;
+}
+
+.layout-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .layout-resize-handle:hover,
 .layout-resize-handle.dragging {
   background-color: var(--accent-color, #007acc);
+}
+
+.layout-resize-handle:hover::after,
+.layout-resize-handle.dragging::after {
+  background: transparent;
 }

@@ -4,12 +4,14 @@
   align-items: center;
   justify-content: space-between;
   height: 24px;
-  background-color: var(--statusbar-bg, #007acc);
-  color: var(--statusbar-fg, #ffffff);
-  font-size: 12px;
-  padding: 0 10px;
+  background-color: var(--statusbar-bg, #1e1e1e);
+  color: var(--statusbar-fg, #888888);
+  font-size: 11px;
+  padding: 0 12px;
   user-select: none;
   flex-shrink: 0;
+  letter-spacing: 0.2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .statusbar-left,
@@ -17,14 +19,21 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .statusbar-item {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.statusbar-item:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .statusbar-indicator {
@@ -33,6 +42,7 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+  transition: background-color 0.3s ease;
 }
 
 /* API status indicators */
@@ -40,6 +50,7 @@
 .statusbar-cli.connected .statusbar-indicator,
 .statusbar-backend.connected .statusbar-indicator {
   background-color: #89d185;
+  box-shadow: 0 0 4px rgba(137, 209, 133, 0.4);
 }
 
 .statusbar-api.disconnected .statusbar-indicator,
@@ -51,6 +62,7 @@
 /* Network status indicators */
 .statusbar-network.online .statusbar-indicator {
   background-color: #89d185;
+  box-shadow: 0 0 4px rgba(137, 209, 133, 0.4);
 }
 
 .statusbar-network.offline .statusbar-indicator {

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
+import { Plus, X, ChevronDown, ChevronUp } from 'lucide-react'
 import { useAppState } from '../store/AppContext'
 import { t } from '../i18n'
 import type { Lang } from '../i18n'
@@ -154,7 +155,7 @@ export function TerminalPanel({ cwd, visible, onToggle }: TerminalPanelProps): J
                 onClick={(e) => { e.stopPropagation(); closeTerminal(tab.id) }}
                 aria-label={t('terminal.close', lang)}
               >
-                ✕
+                <X size={12} />
               </button>
             </div>
           ))}
@@ -164,7 +165,7 @@ export function TerminalPanel({ cwd, visible, onToggle }: TerminalPanelProps): J
             aria-label={t('terminal.new', lang)}
             title={t('terminal.new', lang)}
           >
-            +
+            <Plus size={14} />
           </button>
         </div>
         <button
@@ -172,7 +173,7 @@ export function TerminalPanel({ cwd, visible, onToggle }: TerminalPanelProps): J
           onClick={onToggle}
           aria-label={t('terminal.close', lang)}
         >
-          ✕
+          <X size={12} />
         </button>
       </div>
       <div className="terminal-panel-body">

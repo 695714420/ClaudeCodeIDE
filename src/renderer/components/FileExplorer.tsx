@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
+import { ChevronRight, ChevronDown, FilePlus, FolderPlus, RefreshCw } from 'lucide-react'
 import type { FileTreeNode } from '../../shared/types'
 import { showToast } from './Toast'
 import { t } from '../i18n'
@@ -331,7 +332,7 @@ export function FileExplorer({
         >
           {isDir && (
             <span className="file-explorer-arrow" data-testid={`arrow-${node.name}`}>
-              {isLoading ? '⏳' : isExpanded ? '▼' : '▶'}
+              {isLoading ? '⏳' : isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
             </span>
           )}
           <span className={`file-explorer-icon ${isDir ? 'folder-icon' : 'file-icon'}`}>
@@ -386,7 +387,7 @@ export function FileExplorer({
           title={t('explorer.newFile', lang)}
           aria-label={t('explorer.newFile', lang)}
         >
-          📄+
+          <FilePlus size={14} />
         </button>
         <button
           className="file-explorer-toolbar-btn"
@@ -395,7 +396,7 @@ export function FileExplorer({
           title={t('explorer.newFolder', lang)}
           aria-label={t('explorer.newFolder', lang)}
         >
-          📁+
+          <FolderPlus size={14} />
         </button>
       </div>
 

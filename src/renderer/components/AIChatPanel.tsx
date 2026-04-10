@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
+import { Zap, History as HistoryIcon, Settings, ChevronRight, ChevronLeft, X, Plus, Play } from 'lucide-react'
 import { useAppState, useAppDispatch, type AppAction } from '../store/AppContext'
 import { useAIBackend } from '../hooks/useAIBackend'
 import { HistoryPanel } from './HistoryPanel'
@@ -449,12 +450,12 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
           <span className={`ai-chat-status-dot ${state.cli.status}`} />
         </div>
         <div className="ai-chat-header-actions">
-          <button className="ai-chat-icon-btn" onClick={() => setShowCommandsModal(true)} title={t('chat.quickCommands', lang)} aria-label={t('chat.quickCommands', lang)}>{'\u26A1'}</button>
-          <button className="ai-chat-icon-btn" onClick={() => setShowHistoryModal(true)} title={t('chat.history', lang)} aria-label={t('chat.history', lang)}>{'\uD83D\uDD50'}</button>
-          <button className="ai-chat-icon-btn" onClick={() => setShowStatusModal(true)} title={t('chat.connectionStatus', lang)} aria-label={t('chat.connectionStatus', lang)}>{'\u2699'}</button>
+          <button className="ai-chat-icon-btn" onClick={() => setShowCommandsModal(true)} title={t('chat.quickCommands', lang)} aria-label={t('chat.quickCommands', lang)}><Zap size={14} /></button>
+          <button className="ai-chat-icon-btn" onClick={() => setShowHistoryModal(true)} title={t('chat.history', lang)} aria-label={t('chat.history', lang)}><HistoryIcon size={14} /></button>
+          <button className="ai-chat-icon-btn" onClick={() => setShowStatusModal(true)} title={t('chat.connectionStatus', lang)} aria-label={t('chat.connectionStatus', lang)}><Settings size={14} /></button>
           <button className="ai-chat-panel-toggle" onClick={onToggle} data-testid="ai-chat-panel-toggle"
             aria-label={isExpanded ? t('panel.collapse', lang) : t('panel.expand', lang)} aria-expanded={isExpanded}>
-            {isExpanded ? '\u25B6' : '\u25C0'}
+            {isExpanded ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
           </button>
         </div>
       </div>
@@ -468,11 +469,11 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
                 onClick={() => setActiveSessionId(s.id)}>
                 <span className="ai-chat-session-tab-name">{s.name}</span>
                 {sessions.length > 1 && (
-                  <button className="ai-chat-session-tab-close" onClick={(e) => { e.stopPropagation(); closeSession(s.id) }}>{'\u2715'}</button>
+                  <button className="ai-chat-session-tab-close" onClick={(e) => { e.stopPropagation(); closeSession(s.id) }}><X size={12} /></button>
                 )}
               </div>
             ))}
-            <button className="ai-chat-session-add" onClick={addNewSession} title={t('chat.newChat', lang)}>+</button>
+            <button className="ai-chat-session-add" onClick={addNewSession} title={t('chat.newChat', lang)}><Plus size={14} /></button>
           </div>
 
           <div className="ai-chat-chat-messages" data-testid="ai-chat-chat-messages">
@@ -546,7 +547,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
           <div className="ai-chat-modal ai-chat-modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="ai-chat-modal-header">
               <span>{t('commands.title', lang)}</span>
-              <button onClick={() => { setShowCommandsModal(false); setSelectedCmd(null); setCmdFilter('') }}>{'\u2715'}</button>
+              <button onClick={() => { setShowCommandsModal(false); setSelectedCmd(null); setCmdFilter('') }}><X size={12} /></button>
             </div>
             <div className="ai-chat-modal-body">
               <input className="ai-chat-cmd-filter" placeholder={t('commands.search', lang)} value={cmdFilter}
@@ -567,7 +568,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
                       {group.commands.map(cmd => (
                         <div key={cmd.cmd} className="ai-chat-cmd-item">
                           <button className="ai-chat-cmd-run-btn" onClick={() => handleSlashCommand(cmd)}
-                            disabled={!claude.cliStatus.available || state.cli.isLoading} title={t('chat.execute', lang)}>{'\u25B6'}</button>
+                            disabled={!claude.cliStatus.available || state.cli.isLoading} title={t('chat.execute', lang)}><Play size={12} /></button>
                           <div className="ai-chat-cmd-info" onClick={() => setSelectedCmd(cmd)}>
                             <span className="ai-chat-cmd-name">{cmd.cmd}</span>
                             <span className="ai-chat-cmd-brief">{t(cmd.briefKey, lang)}</span>
@@ -587,7 +588,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
       {showStatusModal && (
         <div className="ai-chat-modal-overlay" onClick={() => setShowStatusModal(false)}>
           <div className="ai-chat-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="ai-chat-modal-header"><span>{t('status.title', lang)}</span><button onClick={() => setShowStatusModal(false)}>{'\u2715'}</button></div>
+            <div className="ai-chat-modal-header"><span>{t('status.title', lang)}</span><button onClick={() => setShowStatusModal(false)}><X size={12} /></button></div>
             <div className="ai-chat-modal-body">
               <div className="ai-chat-status-row"><span>{t('status.label', lang)}</span><span className={`ai-chat-status-badge ${state.cli.status}`}>{state.cli.status === 'connected' ? t('status.connected', lang) : t('status.disconnected', lang)}</span></div>
               {state.cli.version && <div className="ai-chat-status-row"><span>{t('status.version', lang)}:</span><span>v{state.cli.version}</span></div>}
@@ -603,7 +604,7 @@ export function AIChatPanel({ isExpanded, onToggle }: AIChatPanelProps): JSX.Ele
       {showHistoryModal && (
         <div className="ai-chat-modal-overlay" onClick={() => setShowHistoryModal(false)}>
           <div className="ai-chat-modal ai-chat-modal-large" onClick={(e) => e.stopPropagation()}>
-            <div className="ai-chat-modal-header"><span>{t('history.title', lang)}</span><button onClick={() => setShowHistoryModal(false)}>{'\u2715'}</button></div>
+            <div className="ai-chat-modal-header"><span>{t('history.title', lang)}</span><button onClick={() => setShowHistoryModal(false)}><X size={12} /></button></div>
             <div className="ai-chat-modal-body">
               <HistoryPanel records={claude.historyRecords} onSearch={claude.searchHistory} onDelete={claude.deleteHistoryRecord} onReplay={handleLoadHistory} />
             </div>

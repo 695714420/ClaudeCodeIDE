@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react'
+import { Code2 } from 'lucide-react'
 import { useAppState, useAppDispatch } from '../store/AppContext'
 import { t } from '../i18n'
 import type { Lang } from '../i18n'
@@ -93,6 +94,10 @@ export function NavBar({ onFileAction, onEditAction, onViewAction, onOpenSetting
 
   return (
     <nav className="navbar" ref={navRef} data-testid="navbar" role="menubar" aria-label="Main navigation">
+      <div className="navbar-brand">
+        <Code2 size={16} />
+        <span className="navbar-brand-text">Code IDE</span>
+      </div>
       {menus.map((menu) => (
         <div key={menu.label} className="navbar-menu" data-testid={`navbar-menu-${menu.label.toLowerCase()}`}>
           <button

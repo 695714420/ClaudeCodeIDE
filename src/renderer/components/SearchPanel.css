@@ -7,7 +7,7 @@
 
 .search-panel-header {
   padding: 8px;
-  border-bottom: 1px solid var(--border, #333);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .search-input-row,
@@ -19,13 +19,14 @@
 
 .search-input {
   flex: 1;
-  padding: 4px 8px;
+  padding: 6px 10px;
   background: var(--input-bg, #2a2d2e);
-  border: 1px solid var(--input-border, #444);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--input-fg, #d4d4d4);
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: 12px;
   outline: none;
+  transition: border-color 0.15s ease;
 }
 
 .search-input:focus {
@@ -33,14 +34,19 @@
 }
 
 .search-option-btn {
-  padding: 4px 6px;
-  background: var(--btn-bg, rgba(255,255,255,0.06));
-  border: 1px solid var(--btn-border, rgba(255,255,255,0.1));
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--btn-fg, #bbb);
-  border-radius: 3px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 11px;
-  font-family: monospace;
+  font-family: var(--font-mono, 'Cascadia Code', 'Fira Code', 'Consolas', monospace);
+  transition: all 0.15s ease;
+}
+
+.search-option-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .search-option-btn.active {
@@ -50,14 +56,19 @@
 }
 
 .search-replace-btn {
-  padding: 4px 8px;
+  padding: 5px 10px;
   background: var(--accent-color, #007acc);
   color: #fff;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
   white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.search-replace-btn:hover:not(:disabled) {
+  background: #0098ff;
 }
 
 .search-replace-btn:disabled {
@@ -66,10 +77,10 @@
 }
 
 .search-panel-status {
-  padding: 4px 8px;
+  padding: 4px 10px;
   font-size: 11px;
   color: var(--text-secondary, #888);
-  border-bottom: 1px solid var(--border-light, rgba(255,255,255,0.06));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .search-panel-results {
@@ -78,28 +89,29 @@
 }
 
 .search-file-group {
-  border-bottom: 1px solid var(--border-light, rgba(255,255,255,0.06));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .search-file-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 8px;
+  padding: 5px 10px;
   font-size: 12px;
   color: var(--text-primary, #d4d4d4);
   cursor: pointer;
   background: var(--surface, #252526);
+  transition: background 0.15s ease;
 }
 
 .search-file-header:hover {
-  background: var(--surface-hover, #2a2d2e);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .search-file-count {
   font-size: 10px;
-  background: var(--btn-bg, rgba(255,255,255,0.06));
-  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
   border-radius: 8px;
   color: var(--text-secondary, #888);
 }
@@ -107,14 +119,17 @@
 .search-match-row {
   display: flex;
   gap: 8px;
-  padding: 2px 8px 2px 24px;
+  padding: 3px 10px 3px 24px;
   font-size: 12px;
   cursor: pointer;
   color: var(--text-secondary, #888);
+  border-radius: 4px;
+  margin: 1px 4px;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .search-match-row:hover {
-  background: var(--surface-hover, #2a2d2e);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-primary, #d4d4d4);
 }
 
@@ -129,5 +144,5 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: 'Consolas', monospace;
+  font-family: var(--font-mono, 'Cascadia Code', 'Fira Code', 'Consolas', monospace);
 }

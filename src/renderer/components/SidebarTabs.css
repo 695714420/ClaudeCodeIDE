@@ -8,25 +8,29 @@
 .sidebar-tabs {
   display: flex;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-color, #333);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--sidebar-bg, var(--bg-secondary, #252526));
+  gap: 2px;
+  padding: 0 4px;
 }
 
 .sidebar-tab {
   flex: 1;
-  padding: 6px 8px;
+  padding: 8px 8px;
   border: none;
   background: transparent;
   color: var(--text-secondary, #888);
   cursor: pointer;
   font-size: 12px;
   white-space: nowrap;
-  transition: color 0.15s, border-bottom-color 0.15s;
+  transition: color 0.15s ease, background 0.15s ease, border-bottom-color 0.15s ease;
   border-bottom: 2px solid transparent;
+  border-radius: 6px 6px 0 0;
 }
 
 .sidebar-tab:hover {
   color: var(--text-primary, #ccc);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .sidebar-tab.active {

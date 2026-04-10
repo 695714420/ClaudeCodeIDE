@@ -2,12 +2,13 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  height: 35px;
-  background-color: var(--surface, #252526);
-  border-bottom: 1px solid var(--bg, #1e1e1e);
+  height: 36px;
+  background-color: var(--bg, #1e1e1e);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   overflow-x: auto;
   overflow-y: hidden;
   flex-shrink: 0;
+  gap: 1px;
 }
 
 .editor-tabs.empty {
@@ -18,21 +19,23 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 0 12px;
+  padding: 0 14px;
   height: 100%;
   cursor: pointer;
-  background-color: var(--navbar-bg, #2d2d2d);
-  border-right: 1px solid var(--bg, #1e1e1e);
+  background-color: transparent;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
   color: var(--text-secondary, #969696);
   font-size: 13px;
   white-space: nowrap;
   user-select: none;
   min-width: 0;
   flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .editor-tab:hover {
-  background-color: var(--border, #333333);
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary, #d4d4d4);
 }
 
 .editor-tab.active {
@@ -56,21 +59,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border: none;
   background: transparent;
   color: var(--text-secondary, #969696);
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 6px;
   padding: 0;
   flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .editor-tab-close:hover {
-  background-color: var(--hover-overlay, rgba(255, 255, 255, 0.1));
+  background-color: rgba(255, 255, 255, 0.1);
   color: var(--text-primary, #ffffff);
 }
 

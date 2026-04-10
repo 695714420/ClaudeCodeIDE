@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { X } from 'lucide-react'
 import { useAppState, useAppDispatch, FileState } from '../store/AppContext'
 import { t } from '../i18n'
 import type { Lang } from '../i18n'
@@ -132,7 +133,7 @@ export function EditorTabs(): JSX.Element {
               aria-label={`Close ${getFileName(file.path)}`}
               title={t('editor.close', lang)}
             >
-              ×
+              <X size={12} />
             </button>
           </div>
         )
